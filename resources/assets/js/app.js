@@ -15,8 +15,24 @@ window.Vue = require('vue');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('example-component', require('./components/ExampleComponent.vue'));
+//Vue.component('example-component', require('./components/ExampleComponent.vue'));
 
 const app = new Vue({
-    el: '#app'
+    el: '#surveyapp',
+    data: {
+        surveys: []
+    },
+
+    methods: {
+        fetchSurveys: function(){
+            axios.get('/api/surveys').then(function(res){
+                this.surveys = res.data;
+            }).catch(function(err){
+                console.log(err);
+            })
+        },
+    },
+    mounted:function(){
+        this.fetchSurveys();
+    }
 });

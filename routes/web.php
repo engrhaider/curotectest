@@ -14,3 +14,6 @@ use App\User;
 
 Route::get('/', 'UsersController@getIndex');
 Route::get('/users-data', 'UsersController@usersData')->name('users.data');
+Route::get('/surveys',function (){
+    return view('surveys.index');
+});
