@@ -39,20 +39,15 @@
         <!-- Pagination -->
         <nav>
             <ul class="pagination">
-                <li v-if="pagination.current_page > 1">
-                    <a href="#" aria-label="Previous"
-                       @click.prevent="changePage(pagination.current_page - 1)">
+                <li>
+                    <a href="#" aria-label="Previous">
                         <span aria-hidden="true">«</span>
                     </a>
                 </li>
-                <li v-for="page in pagesNumber"
-                    v-bind:class="[ page == isActived ? 'active' : '']">
-                    <a href="#"
-                       @click.prevent="changePage(page)">@{{ page }}</a>
+                <li >page</a>
                 </li>
-                <li v-if="pagination.current_page < pagination.last_page">
-                    <a href="#" aria-label="Next"
-                       @click.prevent="changePage(pagination.current_page + 1)">
+                <li>
+                    <a href="#" aria-label="Next">
                         <span aria-hidden="true">»</span>
                     </a>
                 </li>
@@ -71,20 +66,20 @@
                     <div class="modal-body">
 
 
-                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="createItem">
+                        <form method="POST" enctype="multipart/form-data">
 
 
                             <div class="form-group">
                                 <label for="title">Title:</label>
-                                <input type="text" name="title" class="form-control" v-model="newItem.title" />
-                                <span v-if="formErrors['title']" class="error text-danger">@{{ formErrors['title'] }}</span>
+                                <input type="text" name="title" class="form-control" />
+                                <span  class="error text-danger">@{{ formErrors['title'] }}</span>
                             </div>
 
 
                             <div class="form-group">
                                 <label for="title">Description:</label>
-                                <textarea name="description" class="form-control" v-model="newItem.description"></textarea>
-                                <span v-if="formErrors['description']" class="error text-danger">@{{ formErrors['description'] }}</span>
+                                <textarea name="description" class="form-control" ></textarea>
+                                <span v-if="formErrors['description']" class="error text-danger"></span>
                             </div>
 
 
