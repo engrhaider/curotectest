@@ -25,6 +25,10 @@ const app = new Vue({
         surveys: [],
         users: [],
         pagination:{},
+        survey: {
+            name: '',
+            selectedUsers: []
+        }
     },
 
     methods: {
@@ -40,12 +44,12 @@ const app = new Vue({
         getUsers: function () {
             axios.get(this.app_url + 'users')
                 .then(res => {
-                    //alert('success');
+                //alert('success');
                 this.users = res.data;
-            })
+        })
             .catch(err => {
                 alert('there was some error fetching users');
-            });
+        });
         },
         fetchSurveys: function(page_url){
             page_url = page_url || this.api_url;
@@ -68,7 +72,18 @@ const app = new Vue({
                 this.fetchSurveys();
             }
         },
-
+        addSurvey: function () {
+            axios.post(this.api_url, {
+                name: this.survey.name,
+                selectedusers: this.survey.selectedUsers
+            })
+                .then(function (response) {
+                    console.log(response);
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
     },
     created:function(){
         this.fetchSurveys();

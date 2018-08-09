@@ -13912,7 +13912,11 @@ var app = new Vue({
         app_url: 'http://localhost/curotest/public/',
         surveys: [],
         users: [],
-        pagination: {}
+        pagination: {},
+        survey: {
+            name: '',
+            selectedUsers: []
+        }
     },
 
     methods: {
@@ -13956,8 +13960,17 @@ var app = new Vue({
                 });
                 this.fetchSurveys();
             }
+        },
+        addSurvey: function addSurvey() {
+            axios.post(this.api_url, {
+                name: this.survey.name,
+                selectedusers: this.survey.selectedUsers
+            }).then(function (response) {
+                console.log(response);
+            }).catch(function (error) {
+                console.log(error);
+            });
         }
-
     },
     created: function created() {
         this.fetchSurveys();

@@ -70,29 +70,24 @@
 
 
                             <div class="form-group">
-                                <label for="title">Name:</label>
-                                <input type="text" name="name" class="form-control" />
+                                <label for="title">Name: </label>
+                                <input type="text" name="name" v-model="survey.name" class="form-control" />
                                 <span  class="error text-danger"></span>
                             </div>
 
                             <div class="form-group">
                                 <label for="users">Assign Users</label>
                                 <div>
-                                    <select id="users-select" class="multiselect-ui form-control" multiple="multiple">
+                                    <select id="users-select" class="multiselect-ui form-control" v-model="survey.selectedUsers" multiple="multiple">
                                         <option :value="user.id" v-for="user in users">@{{ user.name }}</option>
                                     </select>
                                 </div>
                             </div>
 
-
                             <div class="form-group">
-                                <button type="submit" class="btn btn-success">Submit</button>
+                                <button type="submit" class="btn btn-success" @click.prevent="addSurvey()">Submit</button>
                             </div>
-
-
                         </form>
-
-
                     </div>
                 </div>
             </div>
