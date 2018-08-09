@@ -3,7 +3,6 @@
 
     <div class="container" id="surveyapp">
 
-
         <div class="row">
             <div class="col-lg-12 margin-tb">
                 <div class="pull-left">
@@ -11,7 +10,7 @@
                 </div>
                 <div class="pull-right">
                     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#create-item">
-                        Create Item
+                        Create Survey
                     </button>
                 </div>
             </div>
@@ -23,14 +22,16 @@
             <tr>
                 <th>Id</th>
                 <th>Name</th>
+                <th>Users Assigned</th>
                 <th width="200px">Action</th>
             </tr>
             <tr v-for="survey in surveys">
                 <td>@{{ survey.id }}</td>
                 <td>@{{ survey.name }}</td>
+                <td><p v-for="user in survey.users">@{{ user.name }},</p></td>
                 <td>
                     <button class="btn btn-primary" >Edit</button>
-                    <button class="btn btn-danger">Delete</button>
+                    <button class="btn btn-danger" @click="deleteSurvey(survey.id)">Delete</button>
                 </td>
             </tr>
         </table>
@@ -39,16 +40,15 @@
         <!-- Pagination -->
         <nav>
             <ul class="pagination">
-                <li>
-                    <a href="#" aria-label="Previous">
-                        <span aria-hidden="true">«</span>
+                <li :class="[{disabled:!pagination.prev_page}]">
+                    <a href="#" aria-label="Previous" @click="fetchSurveys(pagination.prev_page)">
+                        <span aria-hidden="true">Previous</span>
                     </a>
                 </li>
-                <li >page</a>
-                </li>
-                <li>
-                    <a href="#" aria-label="Next">
-                        <span aria-hidden="true">»</span>
+                <li class="page-item"><a class="page-link text-dark">@{{pagination.current_page}} of @{{ pagination.last_page }}</a> </li>
+                <li :class="[{disabled:!pagination.next_page}]">
+                    <a href="#" aria-label="Previous" @click="fetchSurveys(pagination.next_page)">
+                    <span aria-hidden="true">Next</span>
                     </a>
                 </li>
             </ul>
@@ -61,7 +61,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Create Item</h4>
+                        <h4 class="modal-title" id="myModalLabel">Create Survey</h4>
                     </div>
                     <div class="modal-body">
 
@@ -70,16 +70,18 @@
 
 
                             <div class="form-group">
-                                <label for="title">Title:</label>
-                                <input type="text" name="title" class="form-control" />
-                                <span  class="error text-danger">@{{ formErrors['title'] }}</span>
+                                <label for="title">Name:</label>
+                                <input type="text" name="name" class="form-control" />
+                                <span  class="error text-danger"></span>
                             </div>
 
-
                             <div class="form-group">
-                                <label for="title">Description:</label>
-                                <textarea name="description" class="form-control" ></textarea>
-                                <span v-if="formErrors['description']" class="error text-danger"></span>
+                                <label for="users">Assign Users</label>
+                                <div>
+                                    <select id="users-select" class="multiselect-ui form-control" multiple="multiple">
+                                        <option :value="user.id" v-for="user in users">@{{ user.name }}</option>
+                                    </select>
+                                </div>
                             </div>
 
 
@@ -108,20 +110,20 @@
                     <div class="modal-body">
 
 
-                        <form method="POST" enctype="multipart/form-data" v-on:submit.prevent="updateItem(fillItem.id)">
+                        <form method="POST" enctype="multipart/form-data">
 
 
                             <div class="form-group">
                                 <label for="title">Title:</label>
-                                <input type="text" name="title" class="form-control" v-model="fillItem.title" />
-                                <span v-if="formErrorsUpdate['title']" class="error text-danger">@{{ formErrorsUpdate['title'] }}</span>
+                                <input type="text" name="title" class="form-control"  />
+                                <span class="error text-danger"></span>
                             </div>
 
 
                             <div class="form-group">
                                 <label for="title">Description:</label>
-                                <textarea name="description" class="form-control" v-model="fillItem.description"></textarea>
-                                <span v-if="formErrorsUpdate['description']" class="error text-danger">@{{ formErrorsUpdate['description'] }}</span>
+                                <textarea name="description" class="form-control"></textarea>
+                                <span  class="error text-danger"></span>
                             </div>
 
 
@@ -144,6 +146,9 @@
 
 
 
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
     <link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" rel="stylesheet">
 @stop
+@push('scripts')
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+@endpush

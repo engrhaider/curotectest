@@ -13908,20 +13908,60 @@ window.Vue = __webpack_require__(36);
 var app = new Vue({
     el: '#surveyapp',
     data: {
-        surveys: []
+        api_url: 'http://localhost/curotest/public/api/surveys',
+        app_url: 'http://localhost/curotest/public/',
+        surveys: [],
+        users: [],
+        pagination: {}
     },
 
     methods: {
-        fetchSurveys: function fetchSurveys() {
-            axios.get('/api/surveys').then(function (res) {
-                this.surveys = res.data;
+        makePagination: function makePagination(meta, links) {
+            var pagination = {
+                current_page: meta.current_page,
+                last_page: meta.last_page,
+                next_page: links.next,
+                prev_page: links.prev
+            };
+            this.pagination = pagination;
+        },
+        getUsers: function getUsers() {
+            var _this = this;
+
+            axios.get(this.app_url + 'users').then(function (res) {
+                //alert('success');
+                _this.users = res.data;
             }).catch(function (err) {
-                console.log(err);
+                alert('there was some error fetching users');
             });
+        },
+        fetchSurveys: function fetchSurveys(page_url) {
+            var _this2 = this;
+
+            page_url = page_url || this.api_url;
+            axios.get(page_url).then(function (res) {
+                res = res.data;
+                _this2.surveys = res.data;
+                _this2.makePagination(res.meta, res.links);
+            }).catch(function (err) {
+                return console.log(err);
+            });
+        },
+        deleteSurvey: function deleteSurvey(id) {
+            if (confirm("are you sure?")) {
+                axios.delete(this.api_url + '/' + id).then(function (res) {
+                    //alert('deleted');
+                }).catch(function (err) {
+                    alert('There was some problem!');
+                });
+                this.fetchSurveys();
+            }
         }
+
     },
-    mounted: function mounted() {
+    created: function created() {
         this.fetchSurveys();
+        this.getUsers();
     }
 });
 

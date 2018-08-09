@@ -10,7 +10,7 @@
         <!-- Fonts -->
         <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
-
+        <meta name="csrf-token" content="{{ csrf_token() }}">
     </head>
     <body>
     <div class="container">

@@ -20,19 +20,58 @@ window.Vue = require('vue');
 const app = new Vue({
     el: '#surveyapp',
     data: {
-        surveys: []
+        api_url:'http://localhost/curotest/public/api/surveys',
+        app_url: 'http://localhost/curotest/public/',
+        surveys: [],
+        users: [],
+        pagination:{},
     },
 
     methods: {
-        fetchSurveys: function(){
-            axios.get('/api/surveys').then(function(res){
-                this.surveys = res.data;
-            }).catch(function(err){
-                console.log(err);
-            })
+        makePagination: function(meta, links){
+            let pagination = {
+                current_page: meta.current_page,
+                last_page: meta.last_page,
+                next_page: links.next,
+                prev_page: links.prev,
+            }
+            this.pagination = pagination;
         },
+        getUsers: function () {
+            axios.get(this.app_url + 'users')
+                .then(res => {
+                    //alert('success');
+                this.users = res.data;
+            })
+            .catch(err => {
+                alert('there was some error fetching users');
+            });
+        },
+        fetchSurveys: function(page_url){
+            page_url = page_url || this.api_url;
+            axios.get(page_url).then(res => {
+                res = res.data;
+            this.surveys = res.data;
+            this.makePagination(res.meta, res.links);
+        })
+            .catch(err => console.log(err));
+        },
+        deleteSurvey: function (id) {
+            if(confirm("are you sure?")) {
+                axios.delete(this.api_url + '/' + id)
+                    .then(function(res){
+                        //alert('deleted');
+                    })
+                    .catch(function(err){
+                        alert('There was some problem!');
+                    });
+                this.fetchSurveys();
+            }
+        },
+
     },
-    mounted:function(){
+    created:function(){
         this.fetchSurveys();
+        this.getUsers();
     }
 });

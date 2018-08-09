@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Survey;
 
 class SurveyResource extends JsonResource
 {
@@ -14,6 +15,10 @@ class SurveyResource extends JsonResource
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'users' => Survey::find($this->id)->assignedUsers()->get(['users.id','name'])->toArray(),
+        ];
     }
 }
