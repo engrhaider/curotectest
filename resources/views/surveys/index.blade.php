@@ -30,7 +30,7 @@
                 <td>@{{ survey.name }}</td>
                 <td><p v-for="user in survey.users">@{{ user.name }},</p></td>
                 <td>
-                    <button class="btn btn-primary" >Edit</button>
+                    <button class="btn btn-primary" data-toggle="modal" data-target="#edit-item" :data-id="survey.id" @click="editSurvey(survey.id)">Edit</button>
                     <button class="btn btn-danger" @click="deleteSurvey(survey.id)">Delete</button>
                 </td>
             </tr>
@@ -67,8 +67,6 @@
 
 
                         <form method="POST" enctype="multipart/form-data">
-
-
                             <div class="form-group">
                                 <label for="title">Name: </label>
                                 <input type="text" name="name" v-model="survey.name" class="form-control" />
@@ -100,30 +98,29 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Edit Item</h4>
+                        <h4 class="modal-title" id="myModalLabel">Edit Survey</h4>
                     </div>
                     <div class="modal-body">
-
-
                         <form method="POST" enctype="multipart/form-data">
 
-
                             <div class="form-group">
-                                <label for="title">Title:</label>
-                                <input type="text" name="title" class="form-control"  />
-                                <span class="error text-danger"></span>
-                            </div>
-
-
-                            <div class="form-group">
-                                <label for="title">Description:</label>
-                                <textarea name="description" class="form-control"></textarea>
+                                <label for="title">Name: </label>
+                                <input type="text" name="name" v-model="survey.name" class="form-control" />
                                 <span  class="error text-danger"></span>
                             </div>
 
+                            <div class="form-group">
+                                <label for="users">Assign Users</label>
+                                <div>
+                                    <select id="users-select" class="multiselect-ui form-control" v-model="survey.selectedUsers" multiple="multiple">
+                                        <option :value="user.id" v-for="user in users">@{{ user.name }}</option>
+                                    </select>
+                                </div>
+                            </div>
+
 
                             <div class="form-group">
-                                <button type="submit" class="btn btn-success">Submit</button>
+                                <button type="submit" class="btn btn-success" @click.prevent="updateSurvey()">Submit</button>
                             </div>
 
 

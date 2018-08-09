@@ -20,15 +20,17 @@ window.Vue = require('vue');
 const app = new Vue({
     el: '#surveyapp',
     data: {
-        api_url:'http://localhost/curotest/public/api/surveys',
-        app_url: 'http://localhost/curotest/public/',
+        api_url: window.Laravel.base_url+'/api/surveys',
+        app_url: window.Laravel.base_url+'/',
         surveys: [],
         users: [],
         pagination:{},
         survey: {
+            id: '',
             name: '',
             selectedUsers: []
-        }
+        },
+        edit: false
     },
 
     methods: {
@@ -55,8 +57,8 @@ const app = new Vue({
             page_url = page_url || this.api_url;
             axios.get(page_url).then(res => {
                 res = res.data;
-            this.surveys = res.data;
-            this.makePagination(res.meta, res.links);
+                this.surveys = res.data;
+                this.makePagination(res.meta, res.links);
         })
             .catch(err => console.log(err));
         },
@@ -79,10 +81,39 @@ const app = new Vue({
             })
                 .then(function (response) {
                     console.log(response);
+                    $("#create-item").modal('toggle');
                 })
                 .catch(function (error) {
                     console.log(error);
                 });
+
+            this.fetchSurveys();
+        },
+        editSurvey: function (id) {
+            this.survey.id = id;
+            axios.get(this.api_url+'/'+ id)
+                .then(res => {
+                    this.survey.name = res.data.name;
+            })
+            .catch(err => {
+                console.log(err);
+            })
+        },
+        updateSurvey: function () {
+            alert(this.survey.id);
+            axios.put(this.api_url+'/'+this.survey.id, {
+                name: this.survey.name,
+                selectedusers: this.survey.selectedUsers,
+            })
+                .then(res => {
+                    console.log('success updating');
+                    $("#edit-item").modal('toggle');
+
+            })
+            .catch(err => {
+                console.log(err);
+            });
+            this.fetchSurveys();
         }
     },
     created:function(){

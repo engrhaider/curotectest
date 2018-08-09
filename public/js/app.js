@@ -13908,15 +13908,17 @@ window.Vue = __webpack_require__(36);
 var app = new Vue({
     el: '#surveyapp',
     data: {
-        api_url: 'http://localhost/curotest/public/api/surveys',
-        app_url: 'http://localhost/curotest/public/',
+        api_url: window.Laravel.base_url + '/api/surveys',
+        app_url: window.Laravel.base_url + '/',
         surveys: [],
         users: [],
         pagination: {},
         survey: {
+            id: '',
             name: '',
             selectedUsers: []
-        }
+        },
+        edit: false
     },
 
     methods: {
@@ -13967,9 +13969,35 @@ var app = new Vue({
                 selectedusers: this.survey.selectedUsers
             }).then(function (response) {
                 console.log(response);
+                $("#create-item").modal('toggle');
             }).catch(function (error) {
                 console.log(error);
             });
+
+            this.fetchSurveys();
+        },
+        editSurvey: function editSurvey(id) {
+            var _this3 = this;
+
+            this.survey.id = id;
+            axios.get(this.api_url + '/' + id).then(function (res) {
+                _this3.survey.name = res.data.name;
+            }).catch(function (err) {
+                console.log(err);
+            });
+        },
+        updateSurvey: function updateSurvey() {
+            alert(this.survey.id);
+            axios.put(this.api_url + '/' + this.survey.id, {
+                name: this.survey.name,
+                selectedusers: this.survey.selectedUsers
+            }).then(function (res) {
+                console.log('success updating');
+                $("#edit-item").modal('toggle');
+            }).catch(function (err) {
+                console.log(err);
+            });
+            this.fetchSurveys();
         }
     },
     created: function created() {

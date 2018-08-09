@@ -13,6 +13,9 @@ class SurveysController extends Controller
         $surveys = Survey::paginate(5);
         return SurveyResource::collection($surveys);
     }
+    public function show(Survey $survey){
+        return response()->json($survey);
+    }
     public function destroy(Request $request, $id){
         $survey = Survey::find($id);
         $survey->delete();
@@ -30,5 +33,17 @@ class SurveysController extends Controller
         }
 
         return response()->json(['Survey created']);
+    }
+    public function update (Request $request, Survey $survey) {
+        $survey->name = $request->name;
+        $survey->update();
+
+        foreach ($request->selectedusers as $userid){
+            SurveyUser::firstOrCreate([
+                'survey_id' => $survey->id,
+                'user_id' => $userid
+            ]);
+        }
+        return response()->json($survey);
     }
 }
