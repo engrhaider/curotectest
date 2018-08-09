@@ -100,7 +100,7 @@ const app = new Vue({
             })
         },
         updateSurvey: function () {
-            alert(this.survey.id);
+            //alert(this.survey.id);
             axios.put(this.api_url+'/'+this.survey.id, {
                 name: this.survey.name,
                 selectedusers: this.survey.selectedUsers,
